@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>물고기 도감 앱</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f7fbff; color: #123; }
+    h1 { margin-bottom: 0.5rem; }
+    .controls { margin: 1rem 0; }
+    input { padding: 0.5rem; width: min(420px, 100%); border: 1px solid #bcd; border-radius: 8px; }
+    ul { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
+    li { background: white; border: 1px solid #dce8f5; border-radius: 10px; padding: 0.75rem 1rem; }
+    .name { font-weight: 700; }
+    .habitat { color: #456; font-size: 0.9rem; }
+    .empty { margin-top: 1rem; color: #567; }
+  </style>
+</head>
+<body>
+  <h1>물고기 도감 앱</h1>
+  <p>물고기 이름을 검색해서 정보를 확인하세요.</p>
+
+  <div class="controls">
+    <input id="searchInput" type="text" placeholder="예: 금붕어" aria-label="물고기 검색" />
+  </div>
+
+  <ul id="fishList" aria-live="polite"></ul>
+  <p id="emptyState" class="empty" hidden>검색 결과가 없습니다.</p>
+
+  <script>
+    const fishes = [
+      { name: '금붕어', habitat: '담수', note: '관상용으로 널리 키우는 물고기' },
+      { name: '고등어', habitat: '해수', note: '무리를 지어 이동하는 회유성 어종' },
+      { name: '연어', habitat: '회유', note: '강과 바다를 오가며 산란하는 어종' },
+      { name: '니모(흰동가리)', habitat: '해수', note: '산호초 주변에 사는 물고기' }
+    ];
+
+    const searchInput = document.getElementById('searchInput');
+    const fishList = document.getElementById('fishList');
+    const emptyState = document.getElementById('emptyState');
+
+    function render(query = '') {
+      const keyword = query.trim().toLowerCase();
+      const filtered = fishes.filter((fish) => {
+        return fish.name.toLowerCase().includes(keyword) || fish.habitat.toLowerCase().includes(keyword);
+      });
+
+      fishList.innerHTML = filtered.map((fish) => `
+        <li>
+          <div class="name">${fish.name}</div>
+          <div class="habitat">서식 환경: ${fish.habitat}</div>
+          <div>${fish.note}</div>
+        </li>
+      `).join('');
+
+      emptyState.hidden = filtered.length !== 0;
+    }
+
+    searchInput.addEventListener('input', (event) => {
+      render(event.target.value);
+    });
+
+    render();
+  </script>
+</body>
+</html>
