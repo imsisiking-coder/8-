@@ -6,6 +6,31 @@
   <title>물고기 도감 앱</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2rem; background: #f7fbff; color: #123; }
+    .book-screen { display: grid; gap: 0.75rem; justify-items: start; margin-bottom: 1.5rem; }
+    .book-button {
+      border: 0;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .book-cover {
+      width: 220px;
+      height: 140px;
+      border-radius: 6px 10px 10px 6px;
+      background: linear-gradient(140deg, #0f5b8d, #1f7db8);
+      color: #fff;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 0.4rem;
+      border-left: 10px solid #0c446b;
+      box-shadow: 0 6px 14px rgba(14, 72, 109, 0.35);
+      transition: transform 0.15s ease;
+    }
+    .book-button:hover .book-cover,
+    .book-button:focus-visible .book-cover { transform: translateY(-2px); }
+    .book-title { font-size: 1rem; font-weight: 700; }
+    .book-subtitle { font-size: 0.85rem; opacity: 0.95; }
     h1 { margin-bottom: 0.5rem; }
     .controls { margin: 1rem 0; }
     input { padding: 0.5rem; width: min(420px, 100%); border: 1px solid #bcd; border-radius: 8px; }
@@ -17,15 +42,27 @@
   </style>
 </head>
 <body>
-  <h1>물고기 도감 앱</h1>
-  <p>물고기 이름을 검색해서 정보를 확인하세요.</p>
-
-  <div class="controls">
-    <input id="searchInput" type="text" placeholder="예: 금붕어" aria-label="물고기 검색" />
+  <div id="bookScreen" class="book-screen">
+    <button id="bookButton" class="book-button" type="button" aria-controls="encyclopedia" aria-expanded="false">
+      <span class="book-cover">
+        <span class="book-title">물고기 도감</span>
+        <span class="book-subtitle">눌러서 열기</span>
+      </span>
+    </button>
+    <p>닫혀있는 도감책을 눌러 앱을 시작하세요.</p>
   </div>
 
-  <ul id="fishList" aria-live="polite"></ul>
-  <p id="emptyState" class="empty" hidden>검색 결과가 없습니다.</p>
+  <main id="encyclopedia" hidden>
+    <h1>물고기 도감 앱</h1>
+    <p>물고기 이름을 검색해서 정보를 확인하세요.</p>
+
+    <div class="controls">
+      <input id="searchInput" type="text" placeholder="예: 금붕어" aria-label="물고기 검색" />
+    </div>
+
+    <ul id="fishList" aria-live="polite"></ul>
+    <p id="emptyState" class="empty" hidden>검색 결과가 없습니다.</p>
+  </main>
 
   <script>
     const fishes = [
@@ -38,6 +75,9 @@
     const searchInput = document.getElementById('searchInput');
     const fishList = document.getElementById('fishList');
     const emptyState = document.getElementById('emptyState');
+    const bookButton = document.getElementById('bookButton');
+    const bookScreen = document.getElementById('bookScreen');
+    const encyclopedia = document.getElementById('encyclopedia');
 
     function render(query = '') {
       const keyword = query.trim().toLowerCase();
@@ -60,7 +100,13 @@
       render(event.target.value);
     });
 
-    render();
+    bookButton.addEventListener('click', () => {
+      encyclopedia.hidden = false;
+      bookScreen.hidden = true;
+      bookButton.setAttribute('aria-expanded', 'true');
+      render();
+      searchInput.focus();
+    });
   </script>
 </body>
 </html>
