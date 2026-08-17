@@ -4,9 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>물고기 도감 앱</title>
+  <script>document.documentElement.classList.add('js');</script>
   <style>
     body { font-family: Arial, sans-serif; margin: 2rem; background: #f7fbff; color: #123; }
-    .book-screen { display: grid; gap: 0.75rem; justify-items: start; margin-bottom: 1.5rem; }
+    .book-screen { display: none; gap: 0.75rem; justify-items: start; margin-bottom: 1.5rem; }
+    #encyclopedia { display: block; }
+    html.js .book-screen { display: grid; }
+    html.js .book-screen.is-hidden { display: none; }
+    html.js #encyclopedia { display: none; }
+    html.js #encyclopedia.is-open { display: block; }
     .book-button {
       border: 0;
       background: none;
@@ -52,7 +58,7 @@
     <p>닫혀있는 도감책을 눌러 앱을 시작하세요.</p>
   </div>
 
-  <main id="encyclopedia" hidden>
+  <main id="encyclopedia">
     <h1>물고기 도감 앱</h1>
     <p>물고기 이름을 검색해서 정보를 확인하세요.</p>
 
@@ -101,8 +107,8 @@
     });
 
     bookButton.addEventListener('click', () => {
-      encyclopedia.hidden = false;
-      bookScreen.hidden = true;
+      encyclopedia.classList.add('is-open');
+      bookScreen.classList.add('is-hidden');
       bookButton.setAttribute('aria-expanded', 'true');
       render();
       searchInput.focus();
