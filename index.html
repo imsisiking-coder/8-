@@ -116,25 +116,25 @@
     </div>
 
     <ul id="fishList" aria-live="polite">
-      <li data-name="금붕어" data-habitat="담수" data-size="10~20cm" data-food="사료, 작은 수서생물">
+      <li data-name="금붕어" data-habitat="담수" data-location="연못, 강, 수조" data-size="10~20cm" data-food="사료, 작은 수서생물" data-lifespan="5~10년">
         <div class="name">금붕어</div>
         <div class="habitat">서식 환경: 담수</div>
         <div class="feature">관상용으로 널리 키우는 물고기</div>
         <button class="detail-button" type="button">상세 보기</button>
       </li>
-      <li data-name="고등어" data-habitat="해수" data-size="30~45cm" data-food="플랑크톤, 작은 어류">
+      <li data-name="고등어" data-habitat="해수" data-location="연안, 외해" data-size="30~45cm" data-food="플랑크톤, 작은 어류" data-lifespan="8~12년">
         <div class="name">고등어</div>
         <div class="habitat">서식 환경: 해수</div>
         <div class="feature">무리를 지어 이동하는 회유성 어종</div>
         <button class="detail-button" type="button">상세 보기</button>
       </li>
-      <li data-name="연어" data-habitat="회유" data-size="60~100cm" data-food="곤충, 갑각류, 작은 물고기">
+      <li data-name="연어" data-habitat="회유" data-location="하천, 북태평양" data-size="60~100cm" data-food="곤충, 갑각류, 작은 물고기" data-lifespan="3~8년">
         <div class="name">연어</div>
         <div class="habitat">서식 환경: 회유</div>
         <div class="feature">강과 바다를 오가며 산란하는 어종</div>
         <button class="detail-button" type="button">상세 보기</button>
       </li>
-      <li data-name="니모(흰동가리)" data-habitat="해수" data-size="8~11cm" data-food="플랑크톤, 해조류">
+      <li data-name="니모(흰동가리)" data-habitat="해수" data-location="산호초, 말미잘 주변" data-size="8~11cm" data-food="플랑크톤, 해조류" data-lifespan="6~10년">
         <div class="name">니모(흰동가리)</div>
         <div class="habitat">서식 환경: 해수</div>
         <div class="feature">산호초 주변에 사는 물고기</div>
@@ -148,8 +148,10 @@
       <h2 id="detailTitle">물고기 상세 정보</h2>
       <p class="detail-line"><strong>이름:</strong> <span id="detailName"></span></p>
       <p class="detail-line"><strong>서식 환경:</strong> <span id="detailHabitat"></span></p>
+      <p class="detail-line"><strong>서식지:</strong> <span id="detailLocation"></span></p>
       <p class="detail-line"><strong>크기:</strong> <span id="detailSize"></span></p>
       <p class="detail-line"><strong>먹이:</strong> <span id="detailFood"></span></p>
+      <p class="detail-line"><strong>수명:</strong> <span id="detailLifespan"></span></p>
       <p class="detail-line"><strong>특징:</strong> <span id="detailFeature"></span></p>
       <button id="closeDetailButton" class="detail-modal-close" type="button">닫기</button>
     </div>
@@ -167,8 +169,10 @@
     const closeDetailButton = document.getElementById('closeDetailButton');
     const detailName = document.getElementById('detailName');
     const detailHabitat = document.getElementById('detailHabitat');
+    const detailLocation = document.getElementById('detailLocation');
     const detailSize = document.getElementById('detailSize');
     const detailFood = document.getElementById('detailFood');
+    const detailLifespan = document.getElementById('detailLifespan');
     const detailFeature = document.getElementById('detailFeature');
     const fishItems = Array.from(fishList.querySelectorAll('li'));
 
@@ -213,8 +217,10 @@
     function openDetail(item) {
       detailName.textContent = item.dataset.name || '';
       detailHabitat.textContent = item.dataset.habitat || '';
+      detailLocation.textContent = item.dataset.location || '';
       detailSize.textContent = item.dataset.size || '';
       detailFood.textContent = item.dataset.food || '';
+      detailLifespan.textContent = item.dataset.lifespan || '';
       detailFeature.textContent = (item.querySelector('.feature')?.textContent || '').trim();
       detailModal.hidden = false;
       closeDetailButton.focus();
