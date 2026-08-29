@@ -45,6 +45,17 @@
     .name { font-weight: 700; }
     .habitat { color: #456; font-size: 0.9rem; }
     .empty { margin-top: 1rem; color: #567; }
+    .close-button {
+      display: none;
+      margin-bottom: 0.6rem;
+      padding: 0.4rem 0.7rem;
+      border: 1px solid #bcd;
+      border-radius: 8px;
+      background: #fff;
+      color: #234;
+      cursor: pointer;
+    }
+    html.js .close-button { display: inline-block; }
   </style>
 </head>
 <body>
@@ -59,6 +70,7 @@
   </div>
 
   <main id="encyclopedia">
+    <button id="closeBookButton" class="close-button" type="button">도감 닫기</button>
     <h1>물고기 도감 앱</h1>
     <p>물고기 이름을 검색해서 정보를 확인하세요.</p>
 
@@ -67,22 +79,22 @@
     </div>
 
     <ul id="fishList" aria-live="polite">
-      <li>
+      <li data-name="금붕어" data-habitat="담수">
         <div class="name">금붕어</div>
         <div class="habitat">서식 환경: 담수</div>
         <div>관상용으로 널리 키우는 물고기</div>
       </li>
-      <li>
+      <li data-name="고등어" data-habitat="해수">
         <div class="name">고등어</div>
         <div class="habitat">서식 환경: 해수</div>
         <div>무리를 지어 이동하는 회유성 어종</div>
       </li>
-      <li>
+      <li data-name="연어" data-habitat="회유">
         <div class="name">연어</div>
         <div class="habitat">서식 환경: 회유</div>
         <div>강과 바다를 오가며 산란하는 어종</div>
       </li>
-      <li>
+      <li data-name="니모(흰동가리)" data-habitat="해수">
         <div class="name">니모(흰동가리)</div>
         <div class="habitat">서식 환경: 해수</div>
         <div>산호초 주변에 사는 물고기</div>
@@ -92,35 +104,29 @@
   </main>
 
   <script>
-    const fishes = [
-      { name: '금붕어', habitat: '담수', note: '관상용으로 널리 키우는 물고기' },
-      { name: '고등어', habitat: '해수', note: '무리를 지어 이동하는 회유성 어종' },
-      { name: '연어', habitat: '회유', note: '강과 바다를 오가며 산란하는 어종' },
-      { name: '니모(흰동가리)', habitat: '해수', note: '산호초 주변에 사는 물고기' }
-    ];
-
     const searchInput = document.getElementById('searchInput');
     const fishList = document.getElementById('fishList');
     const emptyState = document.getElementById('emptyState');
     const bookButton = document.getElementById('bookButton');
+    const closeBookButton = document.getElementById('closeBookButton');
     const bookScreen = document.getElementById('bookScreen');
     const encyclopedia = document.getElementById('encyclopedia');
+    const fishItems = Array.from(fishList.querySelectorAll('li'));
 
     function render(query = '') {
       const keyword = query.trim().toLowerCase();
-      const filtered = fishes.filter((fish) => {
-        return fish.name.toLowerCase().includes(keyword) || fish.habitat.toLowerCase().includes(keyword);
+      let visibleCount = 0;
+
+      fishItems.forEach((item) => {
+        const name = (item.dataset.name || '').toLowerCase();
+        const habitat = (item.dataset.habitat || '').toLowerCase();
+        const matched = name.includes(keyword) || habitat.includes(keyword);
+        item.hidden = !matched;
+        if (matched) {
+          visibleCount += 1;
+        }
       });
-
-      fishList.innerHTML = filtered.map((fish) => `
-        <li>
-          <div class="name">${fish.name}</div>
-          <div class="habitat">서식 환경: ${fish.habitat}</div>
-          <div>${fish.note}</div>
-        </li>
-      `).join('');
-
-      emptyState.hidden = filtered.length !== 0;
+      emptyState.hidden = visibleCount !== 0;
     }
 
     searchInput.addEventListener('input', (event) => {
@@ -133,6 +139,15 @@
       bookButton.setAttribute('aria-expanded', 'true');
       render();
       searchInput.focus();
+    });
+
+    closeBookButton.addEventListener('click', () => {
+      encyclopedia.classList.remove('is-open');
+      bookScreen.classList.remove('is-hidden');
+      bookButton.setAttribute('aria-expanded', 'false');
+      searchInput.value = '';
+      render();
+      bookButton.focus();
     });
 
     render();
