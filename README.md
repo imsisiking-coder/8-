@@ -5,4 +5,5 @@
 ## 실행 방법
 프로젝트 폴더의 `index.html` 파일을 브라우저로 열면 바로 사용할 수 있습니다.
 예) VS Code 파일 탐색기에서 `index.html` 우클릭 → **Open with Live Server** (또는 **Reveal in File Explorer/Finder** 후 브라우저로 열기)
+※ VS Code의 일반 "미리 보기(Preview)" 탭에서는 웹앱 스크립트가 정상 동작하지 않을 수 있습니다.
 처음에는 닫힌 도감책 모양이 보이며, 이를 누르면 도감 화면이 열립니다.

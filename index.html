@@ -66,7 +66,28 @@
       <input id="searchInput" type="text" placeholder="예: 금붕어" aria-label="물고기 검색" />
     </div>
 
-    <ul id="fishList" aria-live="polite"></ul>
+    <ul id="fishList" aria-live="polite">
+      <li>
+        <div class="name">금붕어</div>
+        <div class="habitat">서식 환경: 담수</div>
+        <div>관상용으로 널리 키우는 물고기</div>
+      </li>
+      <li>
+        <div class="name">고등어</div>
+        <div class="habitat">서식 환경: 해수</div>
+        <div>무리를 지어 이동하는 회유성 어종</div>
+      </li>
+      <li>
+        <div class="name">연어</div>
+        <div class="habitat">서식 환경: 회유</div>
+        <div>강과 바다를 오가며 산란하는 어종</div>
+      </li>
+      <li>
+        <div class="name">니모(흰동가리)</div>
+        <div class="habitat">서식 환경: 해수</div>
+        <div>산호초 주변에 사는 물고기</div>
+      </li>
+    </ul>
     <p id="emptyState" class="empty" hidden>검색 결과가 없습니다.</p>
   </main>
 
@@ -113,6 +134,8 @@
       render();
       searchInput.focus();
     });
+
+    render();
   </script>
 </body>
 </html>
