@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>물고기 도감 앱</title>
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f7fbff; color: #123; }
+    .book-screen { display: none; gap: 0.75rem; justify-items: start; margin-bottom: 1.5rem; }
+    #encyclopedia { display: block; }
+    html.js .book-screen { display: grid; }
+    html.js .book-screen.is-hidden { display: none; }
+    html.js #encyclopedia { display: none; }
+    html.js #encyclopedia.is-open { display: block; }
+    .book-button {
+      border: 0;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .book-cover {
+      width: 220px;
+      height: 140px;
+      border-radius: 6px 10px 10px 6px;
+      background: linear-gradient(140deg, #0f5b8d, #1f7db8);
+      color: #fff;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 0.4rem;
+      border-left: 10px solid #0c446b;
+      box-shadow: 0 6px 14px rgba(14, 72, 109, 0.35);
+      transition: transform 0.15s ease;
+    }
+    .book-button:hover .book-cover,
+    .book-button:focus-visible .book-cover { transform: translateY(-2px); }
+    .book-title { font-size: 1rem; font-weight: 700; }
+    .book-subtitle { font-size: 0.85rem; opacity: 0.95; }
+    h1 { margin-bottom: 0.5rem; }
+    .controls { margin: 1rem 0; }
+    input { padding: 0.5rem; width: min(420px, 100%); border: 1px solid #bcd; border-radius: 8px; }
+    ul { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
+    li { background: white; border: 1px solid #dce8f5; border-radius: 10px; padding: 0.75rem 1rem; }
+    .name { font-weight: 700; }
+    .habitat { color: #456; font-size: 0.9rem; }
+    .empty { margin-top: 1rem; color: #567; }
+    .detail-button {
+      display: none;
+      margin-top: 0.5rem;
+      padding: 0.3rem 0.65rem;
+      border: 1px solid #bcd;
+      border-radius: 8px;
+      background: #fff;
+      color: #234;
+      cursor: pointer;
+    }
+    html.js .detail-button { display: inline-block; }
+    .close-button {
+      display: none;
+      margin-bottom: 0.6rem;
+      padding: 0.4rem 0.7rem;
+      border: 1px solid #bcd;
+      border-radius: 8px;
+      background: #fff;
+      color: #234;
+      cursor: pointer;
+    }
+    html.js .close-button { display: inline-block; }
+    .detail-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+    }
+    .detail-modal-card {
+      width: min(420px, 100%);
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #d5e5f5;
+      padding: 1rem;
+    }
+    .detail-modal-card h2 { margin-top: 0; }
+    .detail-line { margin: 0.4rem 0; }
+    .detail-modal-close {
+      margin-top: 0.8rem;
+      padding: 0.4rem 0.7rem;
+      border: 1px solid #bcd;
+      border-radius: 8px;
+      background: #fff;
+      color: #234;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="bookScreen" class="book-screen">
+    <button id="bookButton" class="book-button" type="button" aria-controls="encyclopedia" aria-expanded="false">
+      <span class="book-cover">
+        <span class="book-title">물고기 도감</span>
+        <span class="book-subtitle">눌러서 열기</span>
+      </span>
+    </button>
+    <p>닫혀있는 도감책을 눌러 앱을 시작하세요.</p>
+  </div>
+
+  <main id="encyclopedia">
+    <button id="closeBookButton" class="close-button" type="button">도감 닫기</button>
+    <h1>물고기 도감 앱</h1>
+    <p>물고기 이름을 검색해서 정보를 확인하세요.</p>
+
+    <div class="controls">
+      <input id="searchInput" type="text" placeholder="예: 금붕어" aria-label="물고기 검색" />
+    </div>
+
+    <ul id="fishList" aria-live="polite">
+      <li data-name="금붕어" data-habitat="담수" data-location="연못, 강, 수조" data-size="10~20cm" data-food="사료, 작은 수서생물" data-lifespan="5~10년">
+        <div class="name">금붕어</div>
+        <div class="habitat">서식 환경: 담수</div>
+        <div class="feature">관상용으로 널리 키우는 물고기</div>
+        <button class="detail-button" type="button">상세 보기</button>
+      </li>
+      <li data-name="고등어" data-habitat="해수" data-location="연안, 외해" data-size="30~45cm" data-food="플랑크톤, 작은 어류" data-lifespan="8~12년">
+        <div class="name">고등어</div>
+        <div class="habitat">서식 환경: 해수</div>
+        <div class="feature">무리를 지어 이동하는 회유성 어종</div>
+        <button class="detail-button" type="button">상세 보기</button>
+      </li>
+      <li data-name="연어" data-habitat="회유" data-location="하천, 북태평양" data-size="60~100cm" data-food="곤충, 갑각류, 작은 물고기" data-lifespan="3~8년">
+        <div class="name">연어</div>
+        <div class="habitat">서식 환경: 회유</div>
+        <div class="feature">강과 바다를 오가며 산란하는 어종</div>
+        <button class="detail-button" type="button">상세 보기</button>
+      </li>
+      <li data-name="니모(흰동가리)" data-habitat="해수" data-location="산호초, 말미잘 주변" data-size="8~11cm" data-food="플랑크톤, 해조류" data-lifespan="6~10년">
+        <div class="name">니모(흰동가리)</div>
+        <div class="habitat">서식 환경: 해수</div>
+        <div class="feature">산호초 주변에 사는 물고기</div>
+        <button class="detail-button" type="button">상세 보기</button>
+      </li>
+    </ul>
+    <p id="emptyState" class="empty" hidden>검색 결과가 없습니다.</p>
+  </main>
+  <div id="detailModal" class="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle" hidden>
+    <div class="detail-modal-card">
+      <h2 id="detailTitle">물고기 상세 정보</h2>
+      <p class="detail-line"><strong>이름:</strong> <span id="detailName"></span></p>
+      <p class="detail-line"><strong>서식 환경:</strong> <span id="detailHabitat"></span></p>
+      <p class="detail-line"><strong>서식지:</strong> <span id="detailLocation"></span></p>
+      <p class="detail-line"><strong>크기:</strong> <span id="detailSize"></span></p>
+      <p class="detail-line"><strong>먹이:</strong> <span id="detailFood"></span></p>
+      <p class="detail-line"><strong>수명:</strong> <span id="detailLifespan"></span></p>
+      <p class="detail-line"><strong>특징:</strong> <span id="detailFeature"></span></p>
+      <button id="closeDetailButton" class="detail-modal-close" type="button">닫기</button>
+    </div>
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const fishList = document.getElementById('fishList');
+    const emptyState = document.getElementById('emptyState');
+    const bookButton = document.getElementById('bookButton');
+    const closeBookButton = document.getElementById('closeBookButton');
+    const bookScreen = document.getElementById('bookScreen');
+    const encyclopedia = document.getElementById('encyclopedia');
+    const detailModal = document.getElementById('detailModal');
+    const closeDetailButton = document.getElementById('closeDetailButton');
+    const detailName = document.getElementById('detailName');
+    const detailHabitat = document.getElementById('detailHabitat');
+    const detailLocation = document.getElementById('detailLocation');
+    const detailSize = document.getElementById('detailSize');
+    const detailFood = document.getElementById('detailFood');
+    const detailLifespan = document.getElementById('detailLifespan');
+    const detailFeature = document.getElementById('detailFeature');
+    const fishItems = Array.from(fishList.querySelectorAll('li'));
+
+    function render(query = '') {
+      const keyword = query.trim().toLowerCase();
+      let visibleCount = 0;
+
+      fishItems.forEach((item) => {
+        const name = (item.dataset.name || '').toLowerCase();
+        const habitat = (item.dataset.habitat || '').toLowerCase();
+        const matched = name.includes(keyword) || habitat.includes(keyword);
+        item.hidden = !matched;
+        if (matched) {
+          visibleCount += 1;
+        }
+      });
+      emptyState.hidden = visibleCount !== 0;
+    }
+
+    searchInput.addEventListener('input', (event) => {
+      render(event.target.value);
+    });
+
+    bookButton.addEventListener('click', () => {
+      encyclopedia.classList.add('is-open');
+      bookScreen.classList.add('is-hidden');
+      bookButton.setAttribute('aria-expanded', 'true');
+      render();
+      searchInput.focus();
+    });
+
+    closeBookButton.addEventListener('click', () => {
+      encyclopedia.classList.remove('is-open');
+      bookScreen.classList.remove('is-hidden');
+      bookButton.setAttribute('aria-expanded', 'false');
+      searchInput.value = '';
+      render();
+      closeDetail();
+      bookButton.focus();
+    });
+
+    function openDetail(item) {
+      detailName.textContent = item.dataset.name || '';
+      detailHabitat.textContent = item.dataset.habitat || '';
+      detailLocation.textContent = item.dataset.location || '';
+      detailSize.textContent = item.dataset.size || '';
+      detailFood.textContent = item.dataset.food || '';
+      detailLifespan.textContent = item.dataset.lifespan || '';
+      detailFeature.textContent = (item.querySelector('.feature')?.textContent || '').trim();
+      detailModal.hidden = false;
+      closeDetailButton.focus();
+    }
+
+    function closeDetail() {
+      detailModal.hidden = true;
+    }
+
+    fishList.addEventListener('click', (event) => {
+      const button = event.target.closest('.detail-button');
+      if (!button) {
+        return;
+      }
+      const item = button.closest('li');
+      if (!item) {
+        return;
+      }
+      openDetail(item);
+    });
+
+    closeDetailButton.addEventListener('click', closeDetail);
+    detailModal.addEventListener('click', (event) => {
+      if (event.target === detailModal) {
+        closeDetail();
+      }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !detailModal.hidden) {
+        closeDetail();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
